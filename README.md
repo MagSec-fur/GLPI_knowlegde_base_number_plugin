@@ -1,4 +1,4 @@
-# Knowldgebaseautonumber
+# Knowledgebaseautonumber
 
 This plugin adds a knowledgbase ID for existing and new knowledgebase items.
 
