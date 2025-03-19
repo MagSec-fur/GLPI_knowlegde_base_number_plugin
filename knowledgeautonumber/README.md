@@ -1,4 +1,4 @@
-# QuConsult Plugin (V4)
+# Knowldgebaseautonumber
 
 This plugin adds a knowledgbase ID for existing and new knowledgebase items.
 
