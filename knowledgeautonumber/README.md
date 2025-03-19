@@ -18,7 +18,7 @@ W.I.P.
 
 ## Usage
 
-When creating or editing an knowledgebase item, it will autogenarate a knowledgebase item ID in the forrmat `KI-#### `
+When creating or editing a knowledgebase item, it will genarate a knowledgebase item ID in the forrmat `KI-#### `
 
 ## Contributing
 
