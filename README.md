@@ -1,6 +1,6 @@
 # Knowledgebaseautonumber
 
-This plugin adds a knowledgbase ID for existing and new knowledgebase items.
+This GLPI plugin adds a knowledgbase ID for existing and new knowledgebase items.
 
 * W.I.P.
 
