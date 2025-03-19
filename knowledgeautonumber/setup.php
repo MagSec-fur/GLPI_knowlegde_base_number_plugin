@@ -5,8 +5,8 @@ function plugin_version_knowledgeautonumber() {
         'name'           => 'Knowledge AutoNumber',
         'version'        => '1.0.3',
         'author'         => 'Destiny_fur',
-        'license'        => 'GPLv2',
-        'minGlpiVersion' => '10.0.6',
+        'license'        => 'GPLv3',
+        'minGlpiVersion' => '10.0.0',
         'maxGlpiVersion' => '10.0.99'
     ];
 }
