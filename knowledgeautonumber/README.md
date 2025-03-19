@@ -3,7 +3,6 @@
 This plugin adds a knowledgbase ID for existing and new knowledgebase items.
 
 * W.I.P.
-* do not use in production yet
 
 ## Installation when u have access to GLPI plugin folder
 
