@@ -66,11 +66,15 @@ function plugin_knowledgeautonumber_post_item_form($item, array $options = []) {
     }
 
     if ($item instanceof KnowbaseItem) {
+        // Bepaal of het een nieuw item is (geen ID)
+        $is_new_item = ($item->getID() == 0);
+
         // Haal vertalingen op
         $label = plugin_knowledgeautonumber_get_translation('Knowledge Item Number');
         $placeholder = plugin_knowledgeautonumber_get_translation('Automatically generated after saving');
 
-        $kb_number = $item->fields['kb_number'] ?? $placeholder;
+        // Toon placeholder alleen bij nieuwe items
+        $kb_number = $is_new_item ? $placeholder : ($item->fields['kb_number'] ?? '');
 
         echo "<div class='form-field row mb-2'>";
         echo "<label class='col-form-label col-sm-4'>$label</label>";
