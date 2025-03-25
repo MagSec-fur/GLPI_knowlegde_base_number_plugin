@@ -7,7 +7,8 @@ function plugin_version_knowledgeautonumber() {
         'author'         => 'Destiny_fur from MagSec',
         'license'        => 'GPLv3',
         'minGlpiVersion' => '10.0.0',
-        'maxGlpiVersion' => '10.0.99'
+        'maxGlpiVersion' => '10.0.99',
+        'icon'           => 'plugins/knowledgeautonumber/pics/icon.png'
     ];
 }
 
