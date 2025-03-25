@@ -14,7 +14,7 @@ This GLPI plugin adds a knowledgbase ID for existing and new knowledgebase items
 
 ## install via CLI
 
-1. cd /var/www/html/glpi/plugins
+1. cd `your glpi plugins folder`
 
 2. git clone https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin.git
 
