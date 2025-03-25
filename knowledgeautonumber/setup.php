@@ -8,7 +8,7 @@ function plugin_version_knowledgeautonumber() {
         'license'        => 'GPLv3',
         'minGlpiVersion' => '10.0.0',
         'maxGlpiVersion' => '10.0.99',
-        'icon'           => 'plugins/knowledgeautonumber/pics/icon.png'
+        'icon'           => 'pics/icon.png'
     ];
 }
 
