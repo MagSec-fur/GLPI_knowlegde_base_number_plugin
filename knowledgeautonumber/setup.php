@@ -25,6 +25,7 @@ function plugin_init_knowledgeautonumber() {
 
     // Add an icon to the plugin in the GLPI interface
     $PLUGIN_HOOKS['add_javascript']['knowledgeautonumber'] = 'pics/icon.png';
+    $PLUGIN_HOOKS['add_css']['knowledgeautonumber'] = 'knowledgeautonumber.css';
 }
 
 
