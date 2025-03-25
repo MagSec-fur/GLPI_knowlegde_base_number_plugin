@@ -21,6 +21,9 @@ function plugin_init_knowledgeautonumber() {
     $PLUGIN_HOOKS['post_item_form']['knowledgeautonumber'] = 'plugin_knowledgeautonumber_post_item_form';
 
     $PLUGIN_HOOKS['init_session']['knowledgeautonumber'] = 'plugin_knowledgeautonumber_init_session';
+
+    // Add an icon to the plugin in the GLPI interface
+    $PLUGIN_HOOKS['add_javascript']['knowledgeautonumber'] = 'pics/icon.png';
 }
 
 
