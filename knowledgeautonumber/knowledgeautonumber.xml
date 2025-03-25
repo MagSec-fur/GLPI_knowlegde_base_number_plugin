@@ -8,4 +8,5 @@
     <minGlpiVersion>10.0.6</minGlpiVersion>
     <maxGlpiVersion>10.0.99</maxGlpiVersion>
     <homepage>https://magsec.nl</homepage>
+    <icon>pics/icon.png</icon>
 </plugin>
