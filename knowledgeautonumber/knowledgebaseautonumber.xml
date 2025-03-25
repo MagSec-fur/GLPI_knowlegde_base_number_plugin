@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin>
     <name>Knowledge AutoNumber</name>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <author>Destiny_fur</author>
+    <author>MagSec</author>
     <license>GPLv2</license>
     <minGlpiVersion>10.0.6</minGlpiVersion>
     <maxGlpiVersion>10.0.99</maxGlpiVersion>
