@@ -1,0 +1,23 @@
+## Installation when u have access to GLPI plugin folder
+
+1. download the plugin
+
+2. Copy the `knowledgeautonumber` directory to the `plugins` directory of your GLPI installation
+
+3. Install and Activate the plugin from the GLPI plugins management interface.
+
+## install via CLI
+
+1. cd `your glpi plugins folder`
+
+2. git clone https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin.git
+
+3. cd GLPI_knowlegde_base_number_plugin
+
+4. mv knowledgebasenumber ..
+
+5. cd ..
+
+6. rm -rf GLPI_knowledge_base_number_plugin
+
+7. Install and Activate the plugin from the GLPI plugins management interface.
