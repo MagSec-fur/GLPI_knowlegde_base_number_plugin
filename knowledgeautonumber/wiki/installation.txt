@@ -6,6 +6,8 @@
 
 3. Install and Activate the plugin from the GLPI plugins management interface.
 
+
+
 ## install via CLI
 
 1. cd `your glpi plugins folder`
