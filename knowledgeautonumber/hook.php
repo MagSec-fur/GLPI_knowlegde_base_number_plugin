@@ -9,7 +9,10 @@ function plugin_knowledgeautonumber_get_translation($string, $language = null) {
         'nl_NL' => [
             'Knowledge Item Number' => 'Kennisbanknummer',
             'Automatically generated after saving' => 'Automatisch gegenereerd na opslaan'
-        ]
+        ],
+        'pl_PL' => [
+            'Knowledge Item Number' => 'Numer pozycji wiedzy',
+            'Automatically generated after saving' => 'Automatycznie generowane po zapisaniu'
     ];
 
     // Bepaal de huidige taal van GLPI
