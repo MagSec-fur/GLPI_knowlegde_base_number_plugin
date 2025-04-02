@@ -13,7 +13,8 @@ function plugin_knowledgeautonumber_get_translation($string, $language = null) {
         'pl_PL' => [
             'Knowledge Item Number' => 'Numer pozycji wiedzy',
             'Automatically generated after saving' => 'Automatycznie generowane po zapisaniu'
-    ];
+    ]
+        ];
 
     // Bepaal de huidige taal van GLPI
     if ($language === null) {
