@@ -17,9 +17,9 @@
       </long>
    </description>
    <homepage>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin</homepage>
-   <download>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/releases/download/V1/knowledgeautonumber.zip</download>
+   <download>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/tree/main/knowledgeautonumber</download>
    <issues>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/issues</issues>
-   <readme>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/issues</readme>
+   <readme>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/blob/main/README.md</readme>
    <authors>
       <author>Destiny_fur</author>
    </authors>
