@@ -2,7 +2,6 @@
 
 Deze GLPI-plugin voegt een kennisdatabasetoken-ID toe voor bestaande en nieuwe kennisdatabasetitems.  
 Gemaakt door Destiny_fur van MagSec  
-*W.I.P.*
 
 ## Installatie wanneer je toegang hebt tot de GLPI-pluginmap
 
