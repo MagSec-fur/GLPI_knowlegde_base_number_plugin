@@ -1,12 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin>
-    <name>Knowledge AutoNumber</name>
-    <version>1.0.5</version>
-    <author>Destiny_fur</author>
-    <author>MagSec</author>
-    <license>GPLv2</license>
-    <minGlpiVersion>10.0.6</minGlpiVersion>
-    <maxGlpiVersion>10.0.99</maxGlpiVersion>
-    <homepage>https://magsec.nl</homepage>
-    <icon>pics/icon.png</icon>
-</plugin>
+<root>
+   <name>Knowledge AutoNumber</name>
+   <key>Knowledge AutoNumber</key>
+   <state>stable</state>
+   <logo>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/issues</logo>
+   <description>
+      <short>
+         <en>Automatically generates numbering for knowledge base articles in GLPI.
+        </en>
+         <lang>...</lang>
+      </short>
+      <long>
+         <en>Automatically generates numbering for knowledge base articles in GLPI.
+        This plugin helps organize and standardize your knowledge base with automatic numbering.</en>
+         <lang>...</lang>
+      </long>
+   </description>
+   <homepage>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin</homepage>
+   <download>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/releases/download/V1.0.5-DEMO/knowledgeautonumber.zip</download>
+   <issues>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/issues</issues>
+   <readme>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/issues</readme>
+   <authors>
+      <author>Your name</author>
+   </authors>
+   <versions>
+      <version>
+         <num>1.0</num>
+         <compatibility>10.0</compatibility>
+         <download_url>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/releases/download/V1.0.5-DEMO/knowledgeautonumber.zip</download_url>
+      </version>
+   </versions>
+   <langs>
+      <lang>en_GB</lang>
+      <lang>nl_NL</lang>
+   </langs>
+   <license>GPL v3</license>
+   <tags>
+      <en>
+         <tag>Knowledge</tag>
+      </en>
+      <lang>
+         <tag>Knowledge</tag>
+      </lang>
+   </tags>
+   <screenshots>
+      <screenshot>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/blob/main/knowledgeautonumber/pics/screenshots/Screenshot_1.png?raw=true</screenshot>
+      <screenshot>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/blob/main/knowledgeautonumber/pics/screenshots/Screenshot_2.png?raw=true</screenshot>
+   </screenshots>
+</root>
