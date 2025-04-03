@@ -3,17 +3,15 @@
    <name>Knowledge AutoNumber</name>
    <key>Knowledge AutoNumber</key>
    <state>stable</state>
-   <logo>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/issues</logo>
+   <logo>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/blob/main/knowledgeautonumber/pics/icon.png?raw=true</logo>
    <description>
       <short>
          <en>Automatically generates numbering for knowledge base articles in GLPI.
         </en>
-         <lang>...</lang>
       </short>
       <long>
          <en>Automatically generates numbering for knowledge base articles in GLPI.
         This plugin helps organize and standardize your knowledge base with automatic numbering.</en>
-         <lang>...</lang>
       </long>
    </description>
    <homepage>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin</homepage>
