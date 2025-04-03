@@ -25,7 +25,7 @@
    </authors>
    <versions>
       <version>
-         <num>1.0</num>
+         <num>1.0.5</num>
          <compatibility>10.0</compatibility>
          <download_url>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/releases/download/V1/knowledgeautonumber.zip</download_url>
       </version>
