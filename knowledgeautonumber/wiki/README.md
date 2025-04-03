@@ -2,7 +2,7 @@
 
 This GLPI plugin adds a knowledgbase ID for existing and new knowledgebase items.
 Made by Destiny_fur from MagSec
-* W.I.P.
+
 
 ## Installation when u have access to GLPI plugin folder
 
