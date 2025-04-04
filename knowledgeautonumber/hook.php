@@ -69,65 +69,226 @@ function plugin_knowledgeautonumber_get_translation($string, $language = null) {
 }
 
 function plugin_knowledgeautonumber_pre_item_add($item) {
-    if ($item instanceof KnowbaseItem && !isset($item->input['kb_number'])) {
+    if ($item instanceof KnowbaseItem) {
         global $DB;
-
-        $DB->beginTransaction();
+        
         try {
-            // Lock de sequence rij
-            $DB->query("SELECT * FROM glpi_plugin_knowledgeautonumber_sequence WHERE id = 1 FOR UPDATE");
-
-            // Haal laatste nummer op
+            // 1. Get next sequence number (with locking)
+            $DB->query("SELECT last_number FROM glpi_plugin_knowledgeautonumber_sequence WHERE id = 1 FOR UPDATE");
+            
             $iterator = $DB->request([
                 'SELECT' => ['last_number'],
                 'FROM' => 'glpi_plugin_knowledgeautonumber_sequence',
-                'WHERE' => ['id' => 1]
+                'WHERE' => ['id' => 1],
+                'LIMIT' => 1
             ]);
-            $last_number = $iterator->current()['last_number'];
-
-            // Genereer nieuw nummer
-            $next_number = $last_number + 1;
-            $kb_number = "KI-" . str_pad($next_number, 4, "0", STR_PAD_LEFT);
-
-            // Update sequence
+            
+            $current_number = $iterator->count() > 0 ? (int)$iterator->current()['last_number'] : 0;
+            $new_number = $current_number + 1;
+            $kb_number = "KI-" . str_pad($new_number, 4, "0", STR_PAD_LEFT);
+            
+            // 2. Store all needed data in the item object
+            $item->input['_auto_kb_number'] = $kb_number;
+            $item->input['_auto_kb_sequence'] = $new_number;
+            
+            // 3. Update sequence immediately
             $DB->update('glpi_plugin_knowledgeautonumber_sequence', [
-                'last_number' => $next_number
+                'last_number' => $new_number
             ], ['id' => 1]);
-
-            // Voeg toe aan item
-            $item->input['kb_number'] = $kb_number;
-
-            $DB->commit();
-
-            Toolbox::logInFile("debug", "Nieuw kb_number gegenereerd: $kb_number");
-
+            
+            // 4. FORCE the number to be saved by adding it to fields
+            $item->fields['kb_number'] = $kb_number;
+            
+            error_log("[KnowledgeAutoNumber] Pre-add: Assigned number $kb_number for new item");
+            
         } catch (Exception $e) {
-            $DB->rollback();
-            Toolbox::logInFile("sql-errors", "Fout in pre_item_add: " . $e->getMessage());
+            error_log("[KnowledgeAutoNumber] Pre-add error: " . $e->getMessage());
+            unset($item->input['_auto_kb_number']);
+            unset($item->input['_auto_kb_sequence']);
         }
     }
 }
 
-function plugin_knowledgeautonumber_post_item_form($item, array $options = []) {
-    if (is_array($item) && isset($item['item'])) {
-        $item = $item['item'];
+function plugin_knowledgeautonumber_post_item_add($item) {
+    if ($item instanceof KnowbaseItem && isset($item->input['_auto_kb_number'])) {
+        global $DB;
+        
+        $item_id = $item->getID();
+        $kb_number = $item->input['_auto_kb_number'];
+        
+        error_log("[KnowledgeAutoNumber] Post-add: Processing item $item_id with number $kb_number");
+        
+        try {
+            // 1. DIRECT INSERT without checking existence first
+            $result = $DB->insert('glpi_plugin_knowledgeautonumber_numbers', [
+                'item_id' => $item_id,
+                'kb_number' => $kb_number
+            ]);
+            
+            if (!$result) {
+                throw new Exception("Insert failed: " . $DB->error());
+            }
+            
+            error_log("[KnowledgeAutoNumber] Successfully inserted KB number $kb_number for item $item_id");
+            
+            // 2. Verify by direct query
+            $check = $DB->request([
+                'SELECT' => ['id'],
+                'FROM' => 'glpi_plugin_knowledgeautonumber_numbers',
+                'WHERE' => ['item_id' => $item_id],
+                'LIMIT' => 1
+            ]);
+            
+            if ($check->count() === 0) {
+                throw new Exception("Verification failed - no record found after insert");
+            }
+            
+        } catch (Exception $e) {
+            error_log("[KnowledgeAutoNumber] Post-add error for item $item_id: " . $e->getMessage());
+            
+            // Attempt to rollback sequence
+            if (isset($item->input['_auto_kb_sequence'])) {
+                $new_number = $item->input['_auto_kb_sequence'];
+                $DB->update('glpi_plugin_knowledgeautonumber_sequence', [
+                    'last_number' => $new_number - 1
+                ], ['id' => 1]);
+                error_log("[KnowledgeAutoNumber] Rolled back sequence to " . ($new_number - 1));
+            }
+        }
     }
+}
+
+function plugin_knowledgeautonumber_post_item_form($params) {
+    $item = is_array($params) && isset($params['item']) ? $params['item'] : $params;
+
+    plugin_knowledgeautonumber_number_all_items();
 
     if ($item instanceof KnowbaseItem) {
-        // Bepaal of het een nieuw item is (geen ID)
-        $is_new_item = ($item->getID() == 0);
-
-        // Haal vertalingen op
+        global $DB;
+        
+        $kb_number = '';
+        $item_id = $item->getID();
+        
+        // Check in this order:
+        // 1. Newly generated number (not yet saved)
+        if (isset($item->input['_auto_kb_number'])) {
+            $kb_number = $item->input['_auto_kb_number'];
+        } 
+        // 2. Item fields (for immediate display after save)
+        elseif (isset($item->fields['kb_number']) && !empty($item->fields['kb_number'])) {
+            $kb_number = $item->fields['kb_number'];
+        }
+        // 3. Database (for existing items)
+        elseif ($item_id > 0) {
+            $iterator = $DB->request([
+                'SELECT' => ['kb_number'],
+                'FROM' => 'glpi_plugin_knowledgeautonumber_numbers',
+                'WHERE' => ['item_id' => $item_id],
+                'LIMIT' => 1
+            ]);
+            
+            if ($iterator->count() > 0) {
+                $kb_number = $iterator->current()['kb_number'];
+            }
+        }
+        
+        // Display the field
         $label = plugin_knowledgeautonumber_get_translation('Knowledge Item Number');
-        $placeholder = plugin_knowledgeautonumber_get_translation('Automatically generated after saving');
-
-        // Toon placeholder alleen bij nieuwe items
-        $kb_number = $is_new_item ? $placeholder : ($item->fields['kb_number'] ?? '');
-
         echo "<div class='form-field row mb-2'>";
         echo "<label class='col-form-label col-sm-4'>$label</label>";
         echo "<div class='col-sm-8'>";
-        echo "<input type='text' class='form-control' value='$kb_number' readonly>";
+        
+        if (!empty($kb_number)) {
+            echo "<input type='text' class='form-control' value='".htmlspecialchars($kb_number, ENT_QUOTES)."' readonly>";
+        } else {
+            $placeholder = plugin_knowledgeautonumber_get_translation('Automatically generated after saving');
+            echo "<input type='text' class='form-control' placeholder='".htmlspecialchars($placeholder, ENT_QUOTES)."' readonly>";
+        }
+        
         echo "</div></div>";
     }
 }
+
+function plugin_knowledgeautonumber_number_all_items() {
+        global $DB;
+    
+        try {
+            // Start a transaction
+            $DB->beginTransaction();
+            Toolbox::logInFile("knowledgeautonumber", "Transaction started for renumbering items from 1.");
+    
+            // Reset the sequence to 1
+            $DB->update('glpi_plugin_knowledgeautonumber_sequence', [
+                'last_number' => 0
+            ], ['id' => 1]);
+    
+            Toolbox::logInFile("knowledgeautonumber", "Sequence reset to 1.");
+    
+            // Get all the items in the knowledge base (this assumes the table is called 'glpi_knowbaseitems')
+            $items = $DB->request([
+                'SELECT' => ['id'],
+                'FROM'   => 'glpi_knowbaseitems',
+                'LIMIT'  => 1000  // Fetch in chunks if there are too many items
+            ]);
+    
+            if ($items->count() == 0) {
+                Toolbox::logInFile("knowledgeautonumber", "No items found to renumber.");
+                $DB->commit();
+                return;
+            }
+    
+            Toolbox::logInFile("knowledgeautonumber", "Found " . $items->count() . " items to renumber.");
+    
+            // Loop through each item and renumber
+            $current_number = 0; // Start from 0 as we'll increment to 1
+            foreach ($items as $item) {
+                $item_id = $item['id'];
+    
+                // Increment the sequence number
+                $current_number++;
+    
+                // Generate the KB number
+                $kb_number = "KI-" . str_pad($current_number, 4, "0", STR_PAD_LEFT);
+    
+                Toolbox::logInFile("knowledgeautonumber", "Generating KB number for item_id $item_id: $kb_number");
+    
+                // Check if the entry already exists in the glpi_plugin_knowledgeautonumber_numbers table
+                $existing_entry = $DB->request([
+                    'SELECT' => ['item_id'],
+                    'FROM'   => 'glpi_plugin_knowledgeautonumber_numbers',
+                    'WHERE'  => ['item_id' => $item_id],
+                    'LIMIT'  => 1
+                ]);
+    
+                if ($existing_entry->count() > 0) {
+                    // If it exists, update the existing entry
+                    Toolbox::logInFile("knowledgeautonumber", "Updating existing KB number for item_id $item_id.");
+                    $DB->update('glpi_plugin_knowledgeautonumber_numbers', [
+                        'kb_number' => $kb_number
+                    ], ['item_id' => $item_id]);
+                } else {
+                    // Otherwise, insert a new record
+                    Toolbox::logInFile("knowledgeautonumber", "Inserting new KB number for item_id $item_id.");
+                    $DB->insert('glpi_plugin_knowledgeautonumber_numbers', [
+                        'item_id'   => $item_id,
+                        'kb_number' => $kb_number
+                    ]);
+                }
+    
+                // Update the sequence table to the latest number
+                $DB->update('glpi_plugin_knowledgeautonumber_sequence', [
+                    'last_number' => $current_number
+                ], ['id' => 1]);
+            }
+    
+            // Commit the transaction after all items have been renumbered
+            $DB->commit();
+            Toolbox::logInFile("knowledgeautonumber", "Transaction committed. All items have been renumbered starting from KI-0001.");
+    
+        } catch (Exception $e) {
+            // Rollback if something goes wrong
+            $DB->rollBack();
+            Toolbox::logInFile("sql-errors", "Error renumbering all items from 1: " . $e->getMessage());
+        }
+    }
+    
