@@ -27,7 +27,7 @@
          <num>1.0.6</num>
          <compatibility>10.0</compatibility>
          <compatibility>10.0.16</compatibility>
-        <compatibility>10.0.18</compatibility>
+         <compatibility>10.0.18</compatibility>
          <compatibility>~10.0</compatibility>
          <download_url>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/releases/download/V1/knowledgeautonumber.zip</download_url>
       </version>
@@ -35,12 +35,14 @@
    <langs>
       <lang>en_GB</lang>
       <lang>nl_NL</lang>
+      <lang>pl_PL</lang>
    </langs>
    <license>GPL v3</license>
    <tags>
       <en>
          <tag>Knowledge</tag>
          <tag>numbering</tag>
+         <tag>knowledgeBase</tag>
       </en>
    </tags>
    <screenshots>
