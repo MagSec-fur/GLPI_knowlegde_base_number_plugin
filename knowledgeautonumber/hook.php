@@ -13,8 +13,52 @@ function plugin_knowledgeautonumber_get_translation($string, $language = null) {
         'pl_PL' => [
             'Knowledge Item Number' => 'Numer pozycji wiedzy',
             'Automatically generated after saving' => 'Automatycznie generowane po zapisaniu'
-    ]
-        ];
+        ],
+        'de_DE' => [
+            'Knowledge Item Number' => 'Wissensartikelnummer',
+            'Automatically generated after saving' => 'Automatisch generiert nach dem Speichern'
+        ],
+        'fr_FR' => [
+            'Knowledge Item Number' => 'Numéro d\'article de connaissance',
+            'Automatically generated after saving' => 'Généré automatiquement après enregistrement'
+        ],
+        'es_ES' => [
+            'Knowledge Item Number' => 'Número de artículo de conocimiento',
+            'Automatically generated after saving' => 'Generado automáticamente después de guardar'
+        ],
+        'it_IT' => [
+            'Knowledge Item Number' => 'Numero elemento conoscenza',
+            'Automatically generated after saving' => 'Generato automaticamente dopo il salvataggio'
+        ],
+        'pt_PT' => [
+            'Knowledge Item Number' => 'Número do item de conhecimento',
+            'Automatically generated after saving' => 'Gerado automaticamente após salvar'
+        ],
+        'ru_RU' => [
+            'Knowledge Item Number' => 'Номер элемента знаний',
+            'Automatically generated after saving' => 'Автоматически генерируется после сохранения'
+        ],
+        'ja_JP' => [
+            'Knowledge Item Number' => 'ナレッジアイテム番号',
+            'Automatically generated after saving' => '保存後に自動生成'
+        ],
+        'zh_CN' => [
+            'Knowledge Item Number' => '知识项目编号',
+            'Automatically generated after saving' => '保存后自动生成'
+        ],
+        'ar_SA' => [
+            'Knowledge Item Number' => 'رقم عنصر المعرفة',
+            'Automatically generated after saving' => 'تم إنشاؤه تلقائيًا بعد الحفظ'
+        ],
+        'tr_TR' => [
+            'Knowledge Item Number' => 'Bilgi Öğe Numarası',
+            'Automatically generated after saving' => 'Kaydetmeden sonra otomatik oluşturulur'
+        ],
+        'sv_SE' => [
+            'Knowledge Item Number' => 'Kunskapsartikelnummer',
+            'Automatically generated after saving' => 'Automatiskt genereras efter sparande'
+        ]
+    ];
 
     // Bepaal de huidige taal van GLPI
     if ($language === null) {

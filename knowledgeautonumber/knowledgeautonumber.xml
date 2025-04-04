@@ -36,6 +36,17 @@
       <lang>en_GB</lang>
       <lang>nl_NL</lang>
       <lang>pl_PL</lang>
+      <lang>de_DE</lang>
+      <lang>fr_FR</lang>
+      <lang>es_ES</lang>
+      <lang>it_IT</lang>
+      <lang>pt_PT</lang>
+      <lang>ru_RU</lang>
+      <lang>ja_JP</lang>
+      <lang>zh_CN</lang>
+      <lang>ar_SA</lang>
+      <lang>tr_TR</lang>
+      <lang>sv_SE</lang>
    </langs>
    <license>GPL v3</license>
    <tags>
