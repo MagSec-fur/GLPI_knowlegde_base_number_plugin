@@ -29,7 +29,7 @@
          <compatibility>10.0.16</compatibility>
          <compatibility>10.0.18</compatibility>
          <compatibility>~10.0</compatibility>
-         <download_url>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/releases/download/V1/knowledgeautonumber.zip</download_url>
+         <download_url>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/releases/download/V1/knowledgeautonumber.tar.bz2</download_url>
       </version>
    </versions>
    <langs>
