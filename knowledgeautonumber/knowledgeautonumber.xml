@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
    <name>Knowledge AutoNumber</name>
-   <key>Knowledge AutoNumber</key>
+   <key>knowledgeautonumber</key>
    <state>stable</state>
    <logo>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/blob/main/knowledgeautonumber/pics/icon.png?raw=true</logo>
    <description>
