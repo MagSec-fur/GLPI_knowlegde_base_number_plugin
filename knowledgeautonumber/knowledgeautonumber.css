@@ -5,3 +5,45 @@
     height: 16px;
     display: inline-block;
 }
+
+/* KB Number Field Styling */
+.kb-number-row {
+    border-top: 1px solid #dee2e6;
+}
+
+.kb-number-label {
+    padding: 12px 15px !important;
+    font-weight: bold;
+    vertical-align: middle !important;
+}
+
+.kb-number-field-container {
+    padding: 5px 0;
+}
+
+.kb-number-field {
+    background-color: #f8f9fa !important;
+    border: 1px solid #ced4da !important;
+    color: #495057 !important;
+    padding: 8px 12px !important;
+    width: 150px !important;
+    display: inline-block !important;
+    cursor: not-allowed !important;
+}
+
+.kb-number-field::placeholder {
+    color: #6c757d !important;
+    opacity: 1 !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .kb-number-field {
+        width: 100% !important;
+    }
+    
+    .kb-number-row td {
+        display: block;
+        width: 100% !important;
+    }
+}
