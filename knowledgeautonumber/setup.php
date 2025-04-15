@@ -30,6 +30,8 @@ function plugin_init_knowledgeautonumber() {
 
     $PLUGIN_HOOKS['init_session']['knowledgeautonumber'] = 'plugin_knowledgeautonumber_init_session';
 
+    $PLUGIN_HOOKS['display']['knowledgeautonumber'] = 'plugin_knowledgeautonumber_display_kb_number_on_view';
+
     $PLUGIN_HOOKS['add_css']['knowledgeautonumber'] = 'knowledgeautonumber.css';
 }
 

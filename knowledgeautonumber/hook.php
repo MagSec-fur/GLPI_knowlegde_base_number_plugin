@@ -209,6 +209,60 @@ function plugin_knowledgeautonumber_post_item_form($params) {
     }
 }
 
+function plugin_knowledgeautonumber_display_kb_number_on_view($params) {
+    // Check if the passed item is a KnowbaseItem
+    $item = is_array($params) && isset($params['item']) ? $params['item'] : $params;
+
+    if ($item instanceof KnowbaseItem) {
+        global $DB;
+
+        // Initialize the knowledge base number
+        $kb_number = '';
+        $item_id = $item->getID();
+        
+        // Check in this order:
+        // 1. Newly generated number (not yet saved)
+        if (isset($item->input['_auto_kb_number'])) {
+            $kb_number = $item->input['_auto_kb_number'];
+        } 
+        // 2. Item fields (for immediate display after save)
+        elseif (isset($item->fields['kb_number']) && !empty($item->fields['kb_number'])) {
+            $kb_number = $item->fields['kb_number'];
+        }
+        // 3. Database (for existing items)
+        elseif ($item_id > 0) {
+            $iterator = $DB->request([
+                'SELECT' => ['kb_number'],
+                'FROM' => 'glpi_plugin_knowledgeautonumber_numbers',
+                'WHERE' => ['item_id' => $item_id],
+                'LIMIT' => 1
+            ]);
+            
+            if ($iterator->count() > 0) {
+                $kb_number = $iterator->current()['kb_number'];
+            }
+        }
+
+        // Display the knowledge item number on the view page
+        $label = plugin_knowledgeautonumber_get_translation('Knowledge Item Number');
+        echo "<div class='form-field row mb-2'>";
+        echo "<label class='col-form-label col-sm-4'>$label</label>";
+        echo "<div class='col-sm-8'>";
+
+        if (!empty($kb_number)) {
+            // If the KB number is available, display it
+            echo "<input type='text' class='form-control' value='".htmlspecialchars($kb_number, ENT_QUOTES)."' readonly>";
+        } else {
+            // Fallback placeholder if KB number is not yet generated
+            $placeholder = plugin_knowledgeautonumber_get_translation('Automatically generated after saving');
+            echo "<input type='text' class='form-control' placeholder='".htmlspecialchars($placeholder, ENT_QUOTES)."' readonly>";
+        }
+
+        echo "</div></div>";
+    }
+}
+
+
 function plugin_knowledgeautonumber_number_all_items() {
         global $DB;
     
