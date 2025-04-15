@@ -1,4 +1,4 @@
 1: git tag -d V1
 2: git tag -a V1 [commit hash]
 3: git push origin V1
-4: zip the knowledgeautonymber folder into .zip AND .tar.bz2 and upload them as release on github
+4: zip the knowledgeautonumber folder into .zip AND .tar.bz2 and upload them as release on github with the V1 tag
