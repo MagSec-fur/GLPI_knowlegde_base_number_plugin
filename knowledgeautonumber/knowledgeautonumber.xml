@@ -3,7 +3,7 @@
    <name>Knowledge AutoNumber</name>
    <key>knowledgeautonumber</key>
    <state>stable</state>
-   <logo>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/blob/main/knowledgeautonumber/pics/icon.png?raw=true</logo>
+   <logo>https://raw.githubusercontent.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/refs/tags/V1/knowledgeautonumber/pics/icon.png</logo>
    <description>
       <short>
          <en>Automatically generates numbering for knowledge base articles in GLPI.
