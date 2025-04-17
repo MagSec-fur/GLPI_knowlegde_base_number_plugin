@@ -3,7 +3,7 @@
 function plugin_version_knowledgeautonumber() {
     return [
         'name'           => 'Knowledge AutoNumber',
-        'version'        => '1.0.10',
+        'version'        => '1.0.11',
         'author'         => 'Destiny_fur from MagSec',
         'license'        => 'GPLv3',
         'minGlpiVersion' => '10.0.0',
@@ -29,6 +29,8 @@ function plugin_init_knowledgeautonumber() {
     $PLUGIN_HOOKS['item_getname']['knowledgeautonumber'] = 'plugin_knowledgeautonumber_item_getname';
 
     $PLUGIN_HOOKS['display_tab_content']['knowledgeautonumber'] = 'plugin_knowledgeautonumber_display_tab';
+    $PLUGIN_HOOKS['item_display_title']['knowledgeautonumber'] = 'plugin_knowledgeautonumber_item_display_title';
+
 
     $PLUGIN_HOOKS['post_item_form']['knowledgeautonumber'] = 'plugin_knowledgeautonumber_post_item_form';
 

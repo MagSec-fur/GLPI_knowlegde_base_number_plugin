@@ -232,6 +232,34 @@ function plugin_knowledgeautonumber_item_getname($itemtype, $id, $name) {
 }
 
 
+function plugin_knowledgeautonumber_item_display_title(CommonGLPI $item) {
+    global $DB;
+
+    if ($item instanceof KnowbaseItem) {
+        $item_id = $item->getID();
+
+        $kb_number = '';
+        $iterator = $DB->request([
+            'SELECT' => ['kb_number'],
+            'FROM' => 'glpi_plugin_knowledgeautonumber_numbers',
+            'WHERE' => ['item_id' => $item_id],
+            'LIMIT' => 1
+        ]);
+
+        if ($iterator->count() > 0) {
+            $kb_number = $iterator->current()['kb_number'];
+        }
+
+        // Inject before the title if available
+        if (!empty($kb_number)) {
+            return "<span style='color:#007bff; font-weight:600;'>[$kb_number]</span> " . $item->fields['name'];
+        }
+    }
+
+    return null; // fallback to default title rendering
+}
+
+
 function plugin_knowledgeautonumber_display_tab($itemtype, $item, $tabnum) {
     global $DB;
 
