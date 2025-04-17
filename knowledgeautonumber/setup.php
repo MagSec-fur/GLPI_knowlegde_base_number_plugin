@@ -28,6 +28,8 @@ function plugin_init_knowledgeautonumber() {
 
     $PLUGIN_HOOKS['item_getname']['knowledgeautonumber'] = 'plugin_knowledgeautonumber_item_getname';
 
+    $PLUGIN_HOOKS['display_tab_content']['knowledgeautonumber'] = 'plugin_knowledgeautonumber_display_tab';
+
     $PLUGIN_HOOKS['post_item_form']['knowledgeautonumber'] = 'plugin_knowledgeautonumber_post_item_form';
 
     $PLUGIN_HOOKS['init_session']['knowledgeautonumber'] = 'plugin_knowledgeautonumber_init_session';

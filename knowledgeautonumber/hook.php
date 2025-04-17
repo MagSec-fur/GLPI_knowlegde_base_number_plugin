@@ -232,6 +232,39 @@ function plugin_knowledgeautonumber_item_getname($itemtype, $id, $name) {
 }
 
 
+function plugin_knowledgeautonumber_display_tab($itemtype, $item, $tabnum) {
+    global $DB;
+
+    if ($itemtype === 'KnowbaseItem' && $tabnum == 0) {
+        $item_id = $item->getID();
+
+        $kb_number = '';
+        $iterator = $DB->request([
+            'SELECT' => ['kb_number'],
+            'FROM' => 'glpi_plugin_knowledgeautonumber_numbers',
+            'WHERE' => ['item_id' => $item_id],
+            'LIMIT' => 1
+        ]);
+
+        if ($iterator->count() > 0) {
+            $kb_number = $iterator->current()['kb_number'];
+        }
+
+        if (!empty($kb_number)) {
+            // Inject using JavaScript (safe way to avoid changing core PHP rendering)
+            echo "<script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    let h2 = document.querySelector('.main_form h2');
+                    if (h2 && !h2.textContent.includes('$kb_number')) {
+                        h2.innerHTML += ' <span style=\"color:#007bff; font-weight:normal;\">($kb_number)</span>';
+                    }
+                });
+            </script>";
+        }
+    }
+}
+
+
 function plugin_knowledgeautonumber_display_kb_number_on_view($params) {
     // Check if the passed item is a KnowbaseItem
     $item = is_array($params) && isset($params['item']) ? $params['item'] : $params;
