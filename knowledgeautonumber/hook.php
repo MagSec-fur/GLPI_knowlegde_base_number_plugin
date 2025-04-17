@@ -294,36 +294,37 @@ function plugin_knowledgeautonumber_display_tab($itemtype, $item, $tabnum) {
 
 
 function plugin_knowledgeautonumber_display_kb_number_on_view($params) {
-    // Check if the passed item is a KnowbaseItem
     $item = is_array($params) && isset($params['item']) ? $params['item'] : $params;
 
     if ($item instanceof KnowbaseItem) {
         global $DB;
 
-        // Initialize the knowledge base number
         $kb_number = '';
         $item_id = $item->getID();
-        
-        // Check in this order:
-        // 1. Newly generated number (not yet saved)
+
+        // Fetch from session input first
         if (isset($item->input['_auto_kb_number'])) {
             $kb_number = $item->input['_auto_kb_number'];
-        } 
-        // 2. Item fields (for immediate display after save)
-        elseif (isset($item->fields['kb_number']) && !empty($item->fields['kb_number'])) {
+        } elseif (isset($item->fields['kb_number']) && !empty($item->fields['kb_number'])) {
             $kb_number = $item->fields['kb_number'];
-        }
-        // 3. Database (for existing items)
-        elseif ($item_id > 0) {
+        } elseif ($item_id > 0) {
             $iterator = $DB->request([
                 'SELECT' => ['kb_number'],
                 'FROM' => 'glpi_plugin_knowledgeautonumber_numbers',
                 'WHERE' => ['item_id' => $item_id],
                 'LIMIT' => 1
             ]);
-            
+
             if ($iterator->count() > 0) {
                 $kb_number = $iterator->current()['kb_number'];
+            }
+        }
+
+        // ✅ Inject into the title directly
+        if (!empty($kb_number)) {
+            $prefix = '[' . $kb_number . '] ';
+            if (strpos($item->fields['name'], $prefix) !== 0) {
+                $item->fields['name'] = $prefix . $item->fields['name'];
             }
         }
 
