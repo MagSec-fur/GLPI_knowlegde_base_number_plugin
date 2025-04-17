@@ -24,7 +24,7 @@
    </authors>
    <versions>
       <version>
-         <num>1.0.13</num>
+         <num>1.0.14</num>
          <compatibility>10.0</compatibility>
          <compatibility>10.0.16</compatibility>
          <compatibility>10.0.18</compatibility>
