@@ -209,26 +209,17 @@ function plugin_knowledgeautonumber_post_item_form($params) {
     }
 }
 
-function plugin_knowledgeautonumber_getAddTabs($item) {
-    if ($item instanceof KnowbaseItem) {
-        return [
-            [
-                'title'   => '', // No visible tab label
-                'content' => true
-            ]
-        ];
+function plugin_knowledgeautonumber_display_number(CommonGLPI $item) {
+    global $DB;
+
+    // Only apply to Knowledgebase Items
+    if (!($item instanceof KnowbaseItem)) {
+        return;
     }
-    return [];
-}
 
+    $item_id = $item->getID();
 
-function plugin_knowledgeautonumber_displayTabContentForItem(CommonGLPI $item, $tabnum) {
-    if ($item instanceof KnowbaseItem && $tabnum == 0) {
-        global $DB;
-
-        $kb_number = '';
-        $item_id = $item->getID();
-
+    if ($item_id > 0) {
         $iterator = $DB->request([
             'SELECT' => ['kb_number'],
             'FROM'   => 'glpi_plugin_knowledgeautonumber_numbers',
@@ -238,17 +229,13 @@ function plugin_knowledgeautonumber_displayTabContentForItem(CommonGLPI $item, $
 
         if ($iterator->count() > 0) {
             $kb_number = $iterator->current()['kb_number'];
-        }
 
-        if (!empty($kb_number)) {
-            echo "<div class='spaced' style='font-size: 1.2em; font-weight: bold; color: #336699;'>
-                    [{$kb_number}]
+            echo "<div class='spaced' style='font-size:16px; color:#336699; font-weight:bold; margin-top:10px;'>
+                    📘 Knowledge Item Number: <code>$kb_number</code>
                   </div>";
         }
     }
 }
-
-
 
 function plugin_knowledgeautonumber_number_all_items() {
         global $DB;
