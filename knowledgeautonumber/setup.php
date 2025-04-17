@@ -3,7 +3,7 @@
 function plugin_version_knowledgeautonumber() {
     return [
         'name'           => 'Knowledge AutoNumber',
-        'version'        => '1.0.9',
+        'version'        => '1.0.10',
         'author'         => 'Destiny_fur from MagSec',
         'license'        => 'GPLv3',
         'minGlpiVersion' => '10.0.0',
