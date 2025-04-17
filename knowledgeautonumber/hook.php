@@ -209,143 +209,45 @@ function plugin_knowledgeautonumber_post_item_form($params) {
     }
 }
 
-function plugin_knowledgeautonumber_item_getname($itemtype, $id, $name) {
-    global $DB;
-
-    if ($itemtype === 'KnowbaseItem' && $id > 0) {
-        $iterator = $DB->request([
-            'SELECT' => ['kb_number'],
-            'FROM' => 'glpi_plugin_knowledgeautonumber_numbers',
-            'WHERE' => ['item_id' => $id],
-            'LIMIT' => 1
-        ]);
-
-        if ($iterator->count() > 0) {
-            $kb_number = $iterator->current()['kb_number'];
-            if (!empty($kb_number)) {
-                return "$name ($kb_number)";
-            }
-        }
-    }
-
-    return $name;
-}
-
-
-function plugin_knowledgeautonumber_item_display_title(CommonGLPI $item) {
-    global $DB;
-
+function plugin_knowledgeautonumber_getAddTabs($item) {
     if ($item instanceof KnowbaseItem) {
-        $item_id = $item->getID();
-
-        $kb_number = '';
-        $iterator = $DB->request([
-            'SELECT' => ['kb_number'],
-            'FROM' => 'glpi_plugin_knowledgeautonumber_numbers',
-            'WHERE' => ['item_id' => $item_id],
-            'LIMIT' => 1
-        ]);
-
-        if ($iterator->count() > 0) {
-            $kb_number = $iterator->current()['kb_number'];
-        }
-
-        // Inject before the title if available
-        if (!empty($kb_number)) {
-            return "<span style='color:#007bff; font-weight:600;'>[$kb_number]</span> " . $item->fields['name'];
-        }
+        return [
+            [
+                'title'   => '', // No visible tab label
+                'content' => true
+            ]
+        ];
     }
-
-    return null; // fallback to default title rendering
+    return [];
 }
 
 
-function plugin_knowledgeautonumber_display_tab($itemtype, $item, $tabnum) {
-    global $DB;
-
-    if ($itemtype === 'KnowbaseItem' && $tabnum == 0) {
-        $item_id = $item->getID();
-
-        $kb_number = '';
-        $iterator = $DB->request([
-            'SELECT' => ['kb_number'],
-            'FROM' => 'glpi_plugin_knowledgeautonumber_numbers',
-            'WHERE' => ['item_id' => $item_id],
-            'LIMIT' => 1
-        ]);
-
-        if ($iterator->count() > 0) {
-            $kb_number = $iterator->current()['kb_number'];
-        }
-
-        if (!empty($kb_number)) {
-            // Inject using JavaScript (safe way to avoid changing core PHP rendering)
-            echo "<script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    let h2 = document.querySelector('.main_form h2');
-                    if (h2 && !h2.textContent.includes('$kb_number')) {
-                        h2.innerHTML += ' <span style=\"color:#007bff; font-weight:normal;\">($kb_number)</span>';
-                    }
-                });
-            </script>";
-        }
-    }
-}
-
-
-function plugin_knowledgeautonumber_display_kb_number_on_view($params) {
-    $item = is_array($params) && isset($params['item']) ? $params['item'] : $params;
-
-    if ($item instanceof KnowbaseItem) {
+function plugin_knowledgeautonumber_displayTabContentForItem(CommonGLPI $item, $tabnum) {
+    if ($item instanceof KnowbaseItem && $tabnum == 0) {
         global $DB;
 
         $kb_number = '';
         $item_id = $item->getID();
 
-        // Fetch from session input first
-        if (isset($item->input['_auto_kb_number'])) {
-            $kb_number = $item->input['_auto_kb_number'];
-        } elseif (isset($item->fields['kb_number']) && !empty($item->fields['kb_number'])) {
-            $kb_number = $item->fields['kb_number'];
-        } elseif ($item_id > 0) {
-            $iterator = $DB->request([
-                'SELECT' => ['kb_number'],
-                'FROM' => 'glpi_plugin_knowledgeautonumber_numbers',
-                'WHERE' => ['item_id' => $item_id],
-                'LIMIT' => 1
-            ]);
+        $iterator = $DB->request([
+            'SELECT' => ['kb_number'],
+            'FROM'   => 'glpi_plugin_knowledgeautonumber_numbers',
+            'WHERE'  => ['item_id' => $item_id],
+            'LIMIT'  => 1
+        ]);
 
-            if ($iterator->count() > 0) {
-                $kb_number = $iterator->current()['kb_number'];
-            }
+        if ($iterator->count() > 0) {
+            $kb_number = $iterator->current()['kb_number'];
         }
-
-        // ✅ Inject into the title directly
-        if (!empty($kb_number)) {
-            $prefix = '[' . $kb_number . '] ';
-            if (strpos($item->fields['name'], $prefix) !== 0) {
-                $item->fields['name'] = $prefix . $item->fields['name'];
-            }
-        }
-
-        // Display the knowledge item number on the view page
-        $label = plugin_knowledgeautonumber_get_translation('Knowledge Item Number');
-        echo "<div class='form-field row mb-2'>";
-        echo "<label class='col-form-label col-sm-4'>$label</label>";
-        echo "<div class='col-sm-8'>";
 
         if (!empty($kb_number)) {
-            // If the KB number is available, display it
-            echo "<input type='text' class='form-control' value='".htmlspecialchars($kb_number, ENT_QUOTES)."' readonly>";
-        } else {
-            // Fallback placeholder if KB number is not yet generated
-            $placeholder = plugin_knowledgeautonumber_get_translation('Automatically generated after saving');
-            echo "<input type='text' class='form-control' placeholder='".htmlspecialchars($placeholder, ENT_QUOTES)."' readonly>";
+            echo "<div class='spaced' style='font-size: 1.2em; font-weight: bold; color: #336699;'>
+                    [{$kb_number}]
+                  </div>";
         }
-
-        echo "</div></div>";
     }
 }
+
 
 
 function plugin_knowledgeautonumber_number_all_items() {

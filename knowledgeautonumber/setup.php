@@ -3,7 +3,7 @@
 function plugin_version_knowledgeautonumber() {
     return [
         'name'           => 'Knowledge AutoNumber',
-        'version'        => '1.0.12',
+        'version'        => '1.0.13',
         'author'         => 'Destiny_fur from MagSec',
         'license'        => 'GPLv3',
         'minGlpiVersion' => '10.0.0',
@@ -26,19 +26,13 @@ function plugin_init_knowledgeautonumber() {
         'KnowbaseItem' => 'plugin_knowledgeautonumber_post_item_add'
     ];
 
-    $PLUGIN_HOOKS['item_getname']['knowledgeautonumber'] = 'plugin_knowledgeautonumber_item_getname';
-
-    $PLUGIN_HOOKS['display_tab_content']['knowledgeautonumber'] = 'plugin_knowledgeautonumber_display_tab';
-    $PLUGIN_HOOKS['item_display_title']['knowledgeautonumber'] = 'plugin_knowledgeautonumber_item_display_title';
-
-
     $PLUGIN_HOOKS['post_item_form']['knowledgeautonumber'] = 'plugin_knowledgeautonumber_post_item_form';
 
     $PLUGIN_HOOKS['init_session']['knowledgeautonumber'] = 'plugin_knowledgeautonumber_init_session';
 
-    $PLUGIN_HOOKS['display']['knowledgeautonumber'] = 'plugin_knowledgeautonumber_display_kb_number_on_view';
-
     $PLUGIN_HOOKS['add_css']['knowledgeautonumber'] = 'knowledgeautonumber.css';
+
+    include_once(GLPI_ROOT . "/plugins/knowledgeautonumber/hook.php");
 }
 
 function plugin_knowledgeautonumber_init_session() {
