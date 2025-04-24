@@ -165,47 +165,52 @@ function plugin_knowledgeautonumber_post_item_form($params) {
 
     if ($item instanceof KnowbaseItem) {
         global $DB;
-        
+
         $kb_number = '';
         $item_id = $item->getID();
-        
-        // Check in this order:
-        // 1. Newly generated number (not yet saved)
+
         if (isset($item->input['_auto_kb_number'])) {
             $kb_number = $item->input['_auto_kb_number'];
-        } 
-        // 2. Item fields (for immediate display after save)
-        elseif (isset($item->fields['kb_number']) && !empty($item->fields['kb_number'])) {
+        } elseif (isset($item->fields['kb_number']) && !empty($item->fields['kb_number'])) {
             $kb_number = $item->fields['kb_number'];
-        }
-        // 3. Database (for existing items)
-        elseif ($item_id > 0) {
+        } elseif ($item_id > 0) {
             $iterator = $DB->request([
                 'SELECT' => ['kb_number'],
                 'FROM' => 'glpi_plugin_knowledgeautonumber_numbers',
                 'WHERE' => ['item_id' => $item_id],
                 'LIMIT' => 1
             ]);
-            
+
             if ($iterator->count() > 0) {
                 $kb_number = $iterator->current()['kb_number'];
             }
         }
-        
-        // Display the field
+
         $label = plugin_knowledgeautonumber_get_translation('Knowledge Item Number');
-        echo "<div class='form-field row mb-2'>";
-        echo "<label class='col-form-label col-sm-4'>$label</label>";
-        echo "<div class='col-sm-8'>";
-        
-        if (!empty($kb_number)) {
-            echo "<input type='text' class='form-control' value='".htmlspecialchars($kb_number, ENT_QUOTES)."' readonly>";
-        } else {
-            $placeholder = plugin_knowledgeautonumber_get_translation('Automatically generated after saving');
-            echo "<input type='text' class='form-control' placeholder='".htmlspecialchars($placeholder, ENT_QUOTES)."' readonly>";
-        }
-        
-        echo "</div></div>";
+        $placeholder = plugin_knowledgeautonumber_get_translation('Automatically generated after saving');
+        $kb_html = "
+            <div id='kb-number-field' class='row'>
+                <div class='form-group col-sm-12'>
+                    <label class='control-label'>$label</label>
+                    <input type='text' class='form-control' value='" . htmlspecialchars($kb_number, ENT_QUOTES) . "' placeholder='" . htmlspecialchars($placeholder, ENT_QUOTES) . "' readonly>
+                </div>
+            </div>
+        ";
+
+        // Output the field (initially just at the end of the form)
+        echo $kb_html;
+
+        // Use JavaScript to move it under the Author field
+        echo "<script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const authorField = document.querySelector('[name=\"authors_id\"]')?.closest('.row');
+                const kbField = document.getElementById('kb-number-field');
+
+                if (authorField && kbField) {
+                    authorField.parentNode.insertBefore(kbField, authorField.nextSibling);
+                }
+            });
+        </script>";
     }
 }
 
