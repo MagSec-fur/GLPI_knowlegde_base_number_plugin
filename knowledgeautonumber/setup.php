@@ -3,7 +3,7 @@
 function plugin_version_knowledgeautonumber() {
     return [
         'name'           => 'Knowledge AutoNumber',
-        'version'        => '1.0.17',
+        'version'        => '1.0.18',
         'author'         => 'Destiny_fur from MagSec',
         'license'        => 'GPLv3',
         'minGlpiVersion' => '10.0.0',
@@ -33,7 +33,10 @@ function plugin_init_knowledgeautonumber() {
     $PLUGIN_HOOKS['init_session']['knowledgeautonumber'] = 'plugin_knowledgeautonumber_init_session';
 
     $PLUGIN_HOOKS['add_css']['knowledgeautonumber'] = 'knowledgeautonumber.css';
+
+        $PLUGIN_HOOKS['item_show_right']['knowledgeautonumber'] = 'plugin_knowledgeautonumber_item_show_right';
 }
+
 
 function plugin_knowledgeautonumber_init_session() {
     if (Session::getLoginUserID()) {

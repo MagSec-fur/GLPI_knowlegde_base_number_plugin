@@ -214,10 +214,13 @@ function plugin_knowledgeautonumber_post_item_form($params) {
     }
 }
 
+function plugin_knowledgeautonumber_item_show_right($item) {
+    plugin_knowledgeautonumber_display_number($item);
+}
+
 function plugin_knowledgeautonumber_display_number(CommonGLPI $item) {
     global $DB;
 
-    // Only apply to Knowledgebase Items
     if (!($item instanceof KnowbaseItem)) {
         return;
     }
@@ -235,12 +238,29 @@ function plugin_knowledgeautonumber_display_number(CommonGLPI $item) {
         if ($iterator->count() > 0) {
             $kb_number = $iterator->current()['kb_number'];
 
-            echo "<div class='spaced' style='font-size:16px; color:#336699; font-weight:bold; margin-top:10px;'>
-                    📘 Knowledge Item Number: <code>$kb_number</code>
+            // Output field in a container with identifiable ID
+            echo "<div id='kb-number-view' class='row'>
+                    <div class='form-group col-sm-12'>
+                        <label class='control-label'>" . plugin_knowledgeautonumber_get_translation('Knowledge Item Number') . "</label>
+                        <input type='text' class='form-control' value='" . htmlspecialchars($kb_number, ENT_QUOTES) . "' readonly>
+                    </div>
                   </div>";
+
+            // Use JS to move it under the writer
+            echo "<script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const writerField = document.querySelector('[name=\"writers_id\"]')?.closest('.row');
+                    const kbView = document.getElementById('kb-number-view');
+
+                    if (writerField && kbView) {
+                        writerField.parentNode.insertBefore(kbView, writerField.nextSibling);
+                    }
+                });
+            </script>";
         }
     }
 }
+
 
 function plugin_knowledgeautonumber_number_all_items() {
         global $DB;
