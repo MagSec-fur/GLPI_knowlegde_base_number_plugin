@@ -24,7 +24,7 @@
    </authors>
    <versions>
       <version>
-         <num>1.0.18</num>
+         <num>1.0.19</num>
          <compatibility>10.0</compatibility>
          <compatibility>10.0.16</compatibility>
          <compatibility>10.0.18</compatibility>
@@ -58,6 +58,7 @@
          <tag>knowledgeBase</tag>
          <tag>Autonumber</tag>
          <tag>MagSec</tag>
+         <tag>Destiny_fur</tag>
       </en>
    </tags>
    <screenshots>
