@@ -1,161 +1,98 @@
 <?php
 
-function plugin_version_knowledgeautonumber() {
+/**
+ * Knowledge AutoNumber - GLPI plugin
+ *
+ * Gives every knowledge base article a stable, unique number (KI-0001, KI-0002, ...).
+ *
+ * @license GPLv3 https://www.gnu.org/licenses/gpl-3.0.html
+ * @link    https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin
+ */
+
+define('PLUGIN_KNOWLEDGEAUTONUMBER_VERSION', '1.1.0');
+
+// Minimal GLPI version, inclusive
+define('PLUGIN_KNOWLEDGEAUTONUMBER_MIN_GLPI_VERSION', '10.0.0');
+// Maximum GLPI version, exclusive
+define('PLUGIN_KNOWLEDGEAUTONUMBER_MAX_GLPI_VERSION', '11.0.99');
+
+// Id of the "Knowledge Item Number" column in the knowledge base search engine
+define('PLUGIN_KNOWLEDGEAUTONUMBER_SEARCH_OPTION_ID', 91750);
+
+/**
+ * Plugin description and requirements.
+ *
+ * @return array
+ */
+function plugin_version_knowledgeautonumber()
+{
     return [
-        'name'           => 'Knowledge AutoNumber',
-        'version'        => '1.0.7',
-        'author'         => 'Destiny_fur from MagSec',
-        'license'        => 'GPLv3',
-        'minGlpiVersion' => '10.0.0',
-        'maxGlpiVersion' => '10.0.99',
-        'homepage'       => 'https://magsec.ml',
-        'icon'           => 'pics/icon.png'
+        'name'         => 'Knowledge AutoNumber',
+        'version'      => PLUGIN_KNOWLEDGEAUTONUMBER_VERSION,
+        'author'       => 'Destiny_fur from MagSec',
+        'license'      => 'GPLv3',
+        'homepage'     => 'https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin',
+        'requirements' => [
+            'glpi' => [
+                'min' => PLUGIN_KNOWLEDGEAUTONUMBER_MIN_GLPI_VERSION,
+                'max' => PLUGIN_KNOWLEDGEAUTONUMBER_MAX_GLPI_VERSION,
+            ],
+            'php'  => [
+                'min' => '7.4',
+            ],
+        ],
     ];
 }
 
-function plugin_init_knowledgeautonumber() {
+/**
+ * Register the plugin hooks.
+ *
+ * @return void
+ */
+function plugin_init_knowledgeautonumber()
+{
     global $PLUGIN_HOOKS;
 
-    $PLUGIN_HOOKS['csrf_compliant']['knowledgeautonumber'] = true;
+    // Deprecated (and always on) since GLPI 11.0.
+    if (version_compare(GLPI_VERSION, '11.0.0', '<')) {
+        $PLUGIN_HOOKS['csrf_compliant']['knowledgeautonumber'] = true;
+    }
 
-    $PLUGIN_HOOKS['pre_item_add']['knowledgeautonumber'] = [
-        'KnowbaseItem' => 'plugin_knowledgeautonumber_pre_item_add'
+    // Assign the next number once the article has really been created.
+    $PLUGIN_HOOKS['item_add']['knowledgeautonumber'] = [
+        'KnowbaseItem' => 'plugin_knowledgeautonumber_item_add',
     ];
 
-    $PLUGIN_HOOKS['post_item_add']['knowledgeautonumber'] = [
-        'KnowbaseItem' => 'plugin_knowledgeautonumber_post_item_add'
+    // Forget the number of an article that is purged. Numbers are never reused.
+    $PLUGIN_HOOKS['item_purge']['knowledgeautonumber'] = [
+        'KnowbaseItem' => 'plugin_knowledgeautonumber_item_purge',
     ];
 
+    // Display only: these hooks never write to the database.
     $PLUGIN_HOOKS['post_item_form']['knowledgeautonumber'] = 'plugin_knowledgeautonumber_post_item_form';
-
-    $PLUGIN_HOOKS['init_session']['knowledgeautonumber'] = 'plugin_knowledgeautonumber_init_session';
-
-    $PLUGIN_HOOKS['add_css']['knowledgeautonumber'] = 'knowledgeautonumber.css';
+    $PLUGIN_HOOKS['pre_show_tab']['knowledgeautonumber']   = 'plugin_knowledgeautonumber_pre_show_tab';
 }
 
-function plugin_knowledgeautonumber_init_session() {
-    if (Session::getLoginUserID()) {
-        Plugin::loadLang('knowledgeautonumber');
-    }
-}
-
-// Plugin installation (unchanged from your original)
-function plugin_knowledgeautonumber_install() {
-    global $DB;
-    
-    $tables = [
-        'glpi_plugin_knowledgeautonumber_sequence' => [
-            'cols' => [
-                'id' => 'INT UNSIGNED NOT NULL PRIMARY KEY',
-                'last_number' => 'INT UNSIGNED NOT NULL DEFAULT 0'
-            ],
-            'init' => ['id' => 1, 'last_number' => 0]
-        ],
-        'glpi_plugin_knowledgeautonumber_numbers' => [
-            'cols' => [
-                'id' => 'INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY',
-                'item_id' => 'INT UNSIGNED NOT NULL',
-                'kb_number' => 'VARCHAR(10) NOT NULL',
-            ],
-            'keys' => [
-                'UNIQUE KEY (`item_id`)',
-                'FOREIGN KEY (`item_id`) REFERENCES `glpi_knowbaseitems`(`id`) ON DELETE CASCADE'
-            ]
-        ]
-    ];
-    
-    foreach ($tables as $table => $def) {
-        if (!$DB->tableExists($table)) {
-            $cols = [];
-            foreach ($def['cols'] as $name => $type) {
-                $cols[] = "`$name` $type";
-            }
-            
-            $sql = "CREATE TABLE `$table` (" . implode(',', $cols);
-            if (!empty($def['keys'])) {
-                $sql .= ',' . implode(',', $def['keys']);
-            }
-            $sql .= ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
-            
-            $DB->query($sql) or die("Failed to create $table: " . $DB->error());
-            
-            if (isset($def['init'])) {
-                $DB->insert($table, $def['init']);
-            }
-        }
-    }
-
-    // Initialize sequence if needed
-    if (!$DB->request(['FROM' => 'glpi_plugin_knowledgeautonumber_sequence'])->count()) {
-        $DB->insert('glpi_plugin_knowledgeautonumber_sequence', [
-            'id' => 1,
-            'last_number' => 0
-        ]);
-    }
-
-    // Assign numbers to existing items
-    $iterator = $DB->request([
-        'SELECT' => ['glpi_knowbaseitems.id'],
-        'FROM' => 'glpi_knowbaseitems',
-        'LEFT JOIN' => [
-            'glpi_plugin_knowledgeautonumber_numbers' => [
-                'FKEY' => [
-                    'glpi_knowbaseitems' => 'id',
-                    'glpi_plugin_knowledgeautonumber_numbers' => 'item_id'
-                ]
-            ]
-        ],
-        'WHERE' => ['glpi_plugin_knowledgeautonumber_numbers.item_id' => null]
-    ]);
-
-    if ($iterator->count() > 0) {
-        $DB->beginTransaction();
-        try {
-            $seq = $DB->request([
-                'SELECT' => ['last_number'],
-                'FROM' => 'glpi_plugin_knowledgeautonumber_sequence',
-                'WHERE' => ['id' => 1]
-            ])->current();
-            
-            $next_number = (int)($seq['last_number'] ?? 0) + 1;
-
-            foreach ($iterator as $row) {
-                $kb_number = "KI-" . str_pad($next_number, 4, "0", STR_PAD_LEFT);
-                $DB->insert('glpi_plugin_knowledgeautonumber_numbers', [
-                    'item_id'   => $row['id'],
-                    'kb_number' => $kb_number
-                ]);
-                $next_number++;
-            }
-
-            $DB->update('glpi_plugin_knowledgeautonumber_sequence', [
-                'last_number' => $next_number - 1
-            ], ['id' => 1]);
-
-            $DB->commit();
-        } catch (Exception $e) {
-            $DB->rollback();
-            Toolbox::logInFile("sql-errors", "Error assigning existing kb_numbers: " . $e->getMessage());
-        }
-    }
-
+/**
+ * Check prerequisites before install.
+ *
+ * Version requirements are declared in plugin_version_knowledgeautonumber().
+ *
+ * @return boolean
+ */
+function plugin_knowledgeautonumber_check_prerequisites()
+{
     return true;
 }
 
-// Plugin uninstallation (unchanged from your original)
-function plugin_knowledgeautonumber_uninstall() {
-    global $DB;
-
-    $tables = [
-        'glpi_plugin_knowledgeautonumber_numbers',
-        'glpi_plugin_knowledgeautonumber_sequence'
-    ];
-
-    foreach ($tables as $table) {
-        if ($DB->tableExists($table)) {
-            $DB->query("DROP TABLE IF EXISTS `$table`");
-        }
-    }
-
+/**
+ * Check configuration process.
+ *
+ * @param boolean $verbose Whether to display message on failure. Defaults to false
+ *
+ * @return boolean
+ */
+function plugin_knowledgeautonumber_check_config($verbose = false)
+{
     return true;
 }

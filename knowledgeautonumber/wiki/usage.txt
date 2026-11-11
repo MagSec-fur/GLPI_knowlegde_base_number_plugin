@@ -1,3 +1,31 @@
 ## Usage
 
-When creating or editing a knowledgebase item, it will genarate a knowledgebase item ID in the forrmat `KI-#### `
+- Create a knowledge base article: it gets the next number when it is saved.
+- The number is shown above the article content, and in the **Edit** tab as a read-only
+  "Knowledge Item Number" field.
+- Search for an article by number with the "Knowledge Item Number" search criterion.
+
+### Console command
+
+Articles created while the plugin was disabled have no number. Number them with:
+
+```bash
+# Only report how many articles have no number
+php bin/console plugins:knowledgeautonumber:fill-missing --dry-run
+
+# Number them (add -v to list each article)
+php bin/console plugins:knowledgeautonumber:fill-missing
+```
+
+This command never changes existing numbers and never restarts the sequence.
+
+## How numbering works
+
+- `glpi_plugin_knowledgeautonumber_sequence` holds the last number used. When an article is created,
+  it is incremented atomically inside a database transaction, so two articles can never get the
+  same number.
+- `glpi_plugin_knowledgeautonumber_numbers` links each article to its number. Both the article and
+  the number are unique.
+- When an article is deleted permanently, its number is removed and is not reused.
+- Numbers have at least 4 digits: `KI-9999` is followed by `KI-10000`.
+- Errors are written to `files/_log/knowledgeautonumber.log`.
