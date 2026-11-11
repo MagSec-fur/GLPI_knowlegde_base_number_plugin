@@ -1,0 +1,21 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Knowledge AutoNumber 1.1.0\n"
+"Report-Msgid-Bugs-To: https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/issues\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es_ES\n"
+
+msgid "Knowledge Item Number"
+msgstr "Número de artículo de conocimiento"
+
+msgid "Automatically generated after saving"
+msgstr "Generado automáticamente después de guardar"
+
+msgid "Not assigned yet"
+msgstr "Aún no asignado"
+
+#, php-format
+msgid "Installation failed: %s"
+msgstr "Error en la instalación: %s"

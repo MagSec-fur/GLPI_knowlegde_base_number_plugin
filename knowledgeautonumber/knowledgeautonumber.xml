@@ -3,26 +3,32 @@
    <name>Knowledge AutoNumber</name>
    <key>knowledgeautonumber</key>
    <state>stable</state>
-   <logo>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/blob/main/knowledgeautonumber/pics/icon.png?raw=true</logo>
+   <logo>https://raw.githubusercontent.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/main/knowledgeautonumber/pics/icon.png</logo>
    <description>
       <short>
-         <en>Automatically generates numbering for knowledge base articles in GLPI.
-        </en>
+         <en>Gives every knowledge base article a unique, permanent number (KI-0001, KI-0002, ...).</en>
       </short>
       <long>
-         <en>Automatically generates numbering for knowledge base articles in GLPI.
-        This plugin helps organize and standardize your knowledge base with automatic numbering.</en>
+         <en>Gives every GLPI knowledge base article a unique, permanent number (KI-0001, KI-0002, ...) when it is created.
+Numbers never change, are never reused, and are shown in the article, in its form and in the search engine.
+A console command numbers articles created while the plugin was disabled.</en>
       </long>
    </description>
    <homepage>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin</homepage>
-   <download>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/tree/V1/knowledgeautonumber</download>
+   <download>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/releases</download>
    <issues>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/issues</issues>
-   <readme>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/blob/main/README.md</readme>
+   <readme>https://raw.githubusercontent.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/main/README.md</readme>
    <authors>
       <author>Destiny_fur</author>
       <author>MagSec</author>
    </authors>
    <versions>
+      <version>
+         <num>1.1.0</num>
+         <compatibility>~10.0</compatibility>
+         <compatibility>~11.0</compatibility>
+         <download_url>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/releases/download/V1/knowledgeautonumber.tar.bz2</download_url>
+      </version>
       <version>
          <num>1.0.7</num>
          <compatibility>10.0</compatibility>
@@ -59,7 +65,7 @@
       </en>
    </tags>
    <screenshots>
-      <screenshot>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/blob/main/knowledgeautonumber/pics/screenshots/Screenshot_1.png?raw=true</screenshot>
-      <screenshot>https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/blob/main/knowledgeautonumber/pics/screenshots/Screenshot_2.png?raw=true</screenshot>
+      <screenshot>https://raw.githubusercontent.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/main/knowledgeautonumber/pics/screenshots/Screenshot_1.png</screenshot>
+      <screenshot>https://raw.githubusercontent.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/main/knowledgeautonumber/pics/screenshots/Screenshot_2.png</screenshot>
    </screenshots>
 </root>

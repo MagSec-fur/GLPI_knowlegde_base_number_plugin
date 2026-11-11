@@ -1,0 +1,19 @@
+{#
+ # Knowledge AutoNumber - GLPI plugin
+ # Read-only "Knowledge Item Number" field shown in the knowledge article form.
+ #}
+{% import 'components/form/fields_macros.html.twig' as fields %}
+
+{% if kb_number is not null %}
+    {% set value %}
+        <span class="badge bg-blue text-white fs-4 user-select-all" data-kb-number="{{ kb_number }}">{{ kb_number }}</span>
+    {% endset %}
+{% else %}
+    {% set value %}
+        <span class="text-muted fst-italic" data-kb-number="">
+            {{ is_new ? __('Automatically generated after saving', 'knowledgeautonumber') : __('Not assigned yet', 'knowledgeautonumber') }}
+        </span>
+    {% endset %}
+{% endif %}
+
+{{ fields.htmlField('', value, __('Knowledge Item Number', 'knowledgeautonumber')) }}

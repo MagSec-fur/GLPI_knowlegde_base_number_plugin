@@ -1,25 +1,47 @@
-## Installation when u have access to GLPI plugin folder
+## Installation
 
-1. download the plugin
+The plugin directory must be named `knowledgeautonumber`.
 
-2. Copy the `knowledgeautonumber` directory to the `plugins` directory of your GLPI installation
+### From a release archive
 
-3. Install and Activate the plugin from the GLPI plugins management interface.
+1. Download the archive from the [releases page](https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/releases).
+2. Extract it into the `plugins` directory of your GLPI installation, so that you get
+   `plugins/knowledgeautonumber/setup.php`.
+3. In GLPI, go to **Setup > Plugins**, install the plugin, then enable it.
 
+### With git
 
+```bash
+cd /path/to/glpi/plugins
+git clone https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin.git
+mv GLPI_knowlegde_base_number_plugin/knowledgeautonumber .
+rm -rf GLPI_knowlegde_base_number_plugin
+```
 
-## install via CLI
+Then install and enable the plugin in **Setup > Plugins**, or from the GLPI directory:
 
-1. cd `your glpi plugins folder`
+```bash
+php bin/console plugin:install knowledgeautonumber -u <admin login>
+php bin/console plugin:activate knowledgeautonumber
+```
 
-2. git clone https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin.git
+During installation, existing articles get a number, oldest article first.
 
-3. cd GLPI_knowlegde_base_number_plugin
+## Upgrading from 1.0.x
 
-4. mv knowledgebasenumber ..
+1. Replace the `knowledgeautonumber` directory with the new version.
+2. In **Setup > Plugins**, click **Update** (or run
+   `php bin/console plugin:install knowledgeautonumber -u <admin login>`), then enable the plugin again.
 
-5. cd ..
+The update:
 
-6. rm -rf GLPI_knowledge_base_number_plugin
+- keeps every existing number exactly as it is;
+- numbers the articles that have no number, continuing after the highest existing number;
+- removes the foreign key that versions up to 1.0.19 created on the GLPI table `glpi_knowbaseitems`,
+  and adds a unique index on the numbers.
 
-7. Install and Activate the plugin from the GLPI plugins management interface.
+Versions up to 1.0.19 renumbered every article from `KI-0001` each time a form was displayed
+(issue [#6](https://github.com/MagSec-fur/GLPI_knowlegde_base_number_plugin/issues/6)). The numbers
+in place when you update are the ones that are kept from then on. Those versions could also fill
+`files/_log/knowledgeautonumber.log` with tens of megabytes of renumbering messages; that file
+can be deleted after the update.
